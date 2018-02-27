@@ -92,7 +92,7 @@ def get_buf_fromserial(ser, buffer_len, buffer_width):
 	return buf
 
 
-def dump_JSON(_posture, _occupied, _data_list, _confidence = None,  _score = None, _x = None, _y = None, _z = None, _ui = None):
+def dump_JSON(_posture, _occupied, _data_list, _confidence = None,  _score = None, _x = None, _y = None, _z = None, _ui = "Please consult the NHS guidelines"):
 	data = {}
 	data["occupied"] = _occupied
 	data["posture"] = _posture
@@ -119,6 +119,10 @@ loaded_model = model_from_json(loaded_model_json)
 loaded_model.load_weights("model.h5")
 print("Loaded model from disk")
 
+history_len = 100
+history = np.zeros(history_len)
+i = 0
+score_guide = 0.4
 while True:
 	try: 
 		buf = get_buf_fromserial(ser, 200, 4)
@@ -138,7 +142,18 @@ while True:
 			print("You have BAD posture")
 			pos = 0
 		
-		dump_JSON(pos, occ, data_vec.tolist())
+		if i>history_len-1:
+			i = 0
+		
+		history[i]=pos
+		i = i + 1
+		score = np.mean(history)
+		if score > score_guide:
+			ui = "Good job!"
+		else:
+			ui = "Please consult the NHS guidelines"
+		
+		dump_JSON(pos, occ, data_vec.tolist(), _score = score, _ui = ui)
 		
 	except ValueError:
 		print("Excepted Value Error")
