@@ -123,6 +123,9 @@ history_len = 100
 history = np.zeros(history_len)
 i = 0
 score_guide = 0.4
+
+thresh = 50000000
+
 while True:
 	try: 
 		buf = get_buf_fromserial(ser, 200, 4)
@@ -130,7 +133,9 @@ while True:
 		print(data_vec)
 		cert = work_function_single_thread(buf, loaded_model) 
 		
-		if (np.mean(data_vec) < 450000):
+		meanval = np.mean(data_vec)
+		print("Abs Val:", meanval)
+		if (meanval < thresh):
 			occ = True
 		else:
 			occ = False
