@@ -17,7 +17,7 @@ Send a POST request::
 """
 from http.server import BaseHTTPRequestHandler, HTTPServer
 #import SocketServer
-import requests
+import requests, json
 
 import NNWorkFn
 
@@ -43,13 +43,22 @@ class S(BaseHTTPRequestHandler):
         # Doesn't do anything with posted data
         content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
         post_data = self.rfile.read(content_length) # <--- Gets the data itself
-        NNWorkFn.work_function_POST(post_data)
-        self._set_headers()
-        f=open("data.json")
-        print("###### POST Request ##########")
-        data = f.read()
-        f.close()
-        self.wfile.write(data.encode('utf-8'))
+        print(self.path)
+        if self.path == "/":
+            NNWorkFn.work_function_POST(post_data)
+            self._set_headers()
+            f=open("data.json")
+            print("###### POST Request ##########")
+            data = f.read()
+            f.close()
+            self.wfile.write(data.encode('utf-8'))
+        elif self.path == "/history":
+            post_data = post_data.decode('utf-8')
+            print(post_data)
+            jsondata = json.loads(post_data)
+            key = jsondata['key']
+            tmp = NNWorkFn.get_JSON_hist('longhistory.csv', key)
+            self.wfile.write(tmp.encode('utf-8'))
         
 def run(server_class=HTTPServer, handler_class=S, port=8000):
     server_address = ('', port)
