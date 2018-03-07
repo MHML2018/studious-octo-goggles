@@ -12,7 +12,9 @@ logfile_fn = "Logger%s.csv" % int(time.time())
 logfile = open(logfile_fn, 'w', newline='')
 csvwriter = csv.writer(logfile, quoting=csv.QUOTE_ALL)
 
-num_readings = 10;
+num_readings = 1000;
+osr = 200
+
 
 try:
 	class_val = sys.argv[1]
@@ -40,7 +42,7 @@ def get_buf_fromserial(ser, buffer_len, buffer_width):
 
 for i in range(0, num_readings+1):
 	try:
-		buf = get_buf_fromserial(ser, 1000, 4)
+		buf = get_buf_fromserial(ser, osr, 4)
 		line = np.mean(buf, axis = 1)
 		print(i/num_readings * 100, "%\t", int(time.time()), "%\t",line)
 		data_line = line.tolist()
