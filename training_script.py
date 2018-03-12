@@ -8,7 +8,7 @@ import pickle
 # fix random seed for reproducibility
 #numpy.random.seed(7)
 # load pima indians dataset
-dataset = np.loadtxt("DataSetV2/data.csv", delimiter=",")
+dataset = np.loadtxt("DataSetV3/data.csv", delimiter=",")
 # split into input (X) and output (Y) variables
 X = dataset[:,0:13]
 meanz = np.mean(X)
