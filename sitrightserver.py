@@ -19,7 +19,31 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 #import SocketServer
 import requests, json
 
+import numpy as np
+
 import NNWorkFn
+
+import serial
+ser = serial.Serial('COM3', 115200, timeout=10)  # open serial port
+print("Opened port:", ser.name) # check which port was really used
+
+KEY = 6769
+
+def get_buf_fromserial(ser, buffer_len, buffer_width):
+    buf = np.zeros((buffer_width, buffer_len), dtype=float)
+    for i in range(0, buffer_len):
+        line = ser.readline()   # read a '\n' terminated line
+        line = line.decode("utf-8") 
+        line = line.strip('\n')
+        line_str = line.split(",")
+        line_int = []
+        for j in range(0, len(line_str)):
+            line_int.append(int(line_str[j]))
+        # #line_int = map(int, line_str)
+        line_arr = np.asarray(line_int)
+        #print("Shapes", line_arr.shape, buf.shape)
+        buf[:,i] = line_arr
+    return buf
 
 class S(BaseHTTPRequestHandler):
     def _set_headers(self):
@@ -29,12 +53,31 @@ class S(BaseHTTPRequestHandler):
 
     def do_GET(self):
         self._set_headers()
-        f=open("data.json")
-        print("###### GET Request ##########")
-        data = f.read()
-        f.close()
-        self.wfile.write(data.encode('utf-8'))
-		
+        if self.path == "/":
+            f=open("data.json")
+            print("###### GET Request ##########")
+            data = f.read()
+            f.close()
+            self.wfile.write(data.encode('utf-8'))
+        elif self.path == "/serial":
+            print("###### SERIAL GET Request ##########")
+            while True:
+                try:
+                    buf = get_buf_fromserial(ser, 200, 13)
+                    buf = np.mean(buf, axis=1)
+                    break
+                except ValueError:
+                    print("Value Error")
+            buf_dict = {}
+            buf_dict['data'] = buf.tolist()
+            buf_dict['key'] = KEY
+            buf_json = json.dumps(buf_dict)
+            NNWorkFn.work_function_POST(buf_json.encode('utf-8'))
+            self._set_headers()
+            f=open("data.json")
+            data = f.read()
+            f.close()
+            self.wfile.write(data.encode('utf-8'))
 
     def do_HEAD(self):
         self._set_headers()

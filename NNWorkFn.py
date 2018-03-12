@@ -47,9 +47,9 @@ def work_function_single_thread(input_data, loaded_model):
     X = np.asarray(input_data, dtype=np.float32)
     #np_input = np.asmatrix(input_data, dtype = np.float)
     #X = np.mean(np.asarray(input_data, dtype=np.float), axis=1)
-    meanz = 30394.920450310557
-    maxz = 56523.92
-    minz = 17337.13
+    meanz = 3651832
+    maxz = 2147483647.92
+    minz = 11431.13
     X = X - meanz
     X = X/(maxz-minz)
     # We need to load the nnet into memory in each thread (to make it thread safe)
@@ -131,12 +131,20 @@ def work_function_POST(buf):
 			occ = False
 			print("NO ONE IS SITTING HERE")
 		
-		if cert[0][0]>cert[0][1]:
-			print("You have GOOD posture")
-			pos = 1
+		pos = int(np.argmax(cert))
+		
+		if pos == 0:
+			print("GOOD")
+		elif pos == 1:
+			print("Leaning Back")
+		elif pos == 2:
+			print("Leaning Forward")
+		elif pos == 3:
+			print("Leaning Left")
+		elif pos == 4:
+			print("Leaning Right")
 		else:
-			print("You have BAD posture")
-			pos = 0
+			print("Invalid Class")
 		
 		
 	except ValueError:

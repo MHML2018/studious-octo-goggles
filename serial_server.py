@@ -127,10 +127,14 @@ score_guide = 0.4
 thresh = 50000000
 
 while True:
-	try: 
+	try:
 		buf = get_buf_fromserial(ser, 200, 13)
+		f = buf.tolist()
+		f = json.dumps(f)
+		print('################')
+		print(type(f.encode('utf-8')))
 		data_vec = np.mean(buf, axis=1)
-		print(data_vec)
+		#print(data_vec)
 		cert = work_function_single_thread(buf, loaded_model) 
 		
 		meanval = np.mean(data_vec)
