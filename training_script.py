@@ -8,24 +8,24 @@ import pickle
 # fix random seed for reproducibility
 #numpy.random.seed(7)
 # load pima indians dataset
-dataset = np.loadtxt("TrainDatV1.csv", delimiter=",")
+dataset = np.loadtxt("DataSetV2/data.csv", delimiter=",")
 # split into input (X) and output (Y) variables
-X = dataset[:,0:4]
+X = dataset[:,0:13]
 meanz = np.mean(X)
 maxz = np.max(X)
 minz = np.min(X)
 X = X-meanz
 X = X/(maxz - minz)
 
-num_classes = 2
+num_classes = 5
 
-Y = dataset[:,4]
+Y = dataset[:,13]
 Y = to_categorical(Y, num_classes)
 # create model
-print(X)
-print(Y)
+#print(X)
+#print(Y)
 model = Sequential()
-model.add(Dense(12, input_dim=4, activation='tanh'))
+model.add(Dense(12, input_dim=13, activation='tanh'))
 model.add(Dense(12, activation='relu'))
 model.add(Dense(10, activation='relu'))
 model.add(Dense(num_classes, activation='sigmoid'))
