@@ -4,11 +4,11 @@ from keras.layers import Dense
 from keras.optimizers import *
 from keras.utils import to_categorical
 import numpy as np
-import pickle
+#6import pickle
 # fix random seed for reproducibility
 #numpy.random.seed(7)
 # load pima indians dataset
-dataset = np.loadtxt("DataSetV3/data.csv", delimiter=",")
+dataset = np.loadtxt("DataSetV2/data.csv", delimiter=",")
 # split into input (X) and output (Y) variables
 X = dataset[:,0:13]
 meanz = np.mean(X)
@@ -25,16 +25,16 @@ Y = to_categorical(Y, num_classes)
 #print(X)
 #print(Y)
 model = Sequential()
-model.add(Dense(12, input_dim=13, activation='tanh'))
-model.add(Dense(12, activation='relu'))
-model.add(Dense(10, activation='relu'))
+model.add(Dense(18, input_dim=13, activation='tanh'))
+model.add(Dense(20, activation='relu'))
+model.add(Dense(8, activation='relu'))
 model.add(Dense(num_classes, activation='sigmoid'))
 # Compile model
 model.compile(loss='categorical_crossentropy',
-              optimizer=Adamax(),
+              optimizer=RMSprop(),
               metrics=['accuracy'])
 			  
-model.fit(X, Y, epochs=200, batch_size=10, verbose=1)
+model.fit(X, Y, epochs=200, batch_size=100, verbose=1)
 # evaluate the model
 scores = model.evaluate(X, Y)
 print("\n%s: %.2f%%" % (model.metrics_names[1], scores[1]*100))
