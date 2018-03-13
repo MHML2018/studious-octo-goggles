@@ -17,7 +17,7 @@ minz = np.min(X)
 X = X-meanz
 X = X/(maxz - minz)
 
-num_classes = 2
+num_classes = 6
 
 Y = dataset[:,13]
 Y = to_categorical(Y, num_classes)

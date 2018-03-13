@@ -47,9 +47,9 @@ def work_function_single_thread(input_data, loaded_model):
     X = np.asarray(input_data, dtype=np.float32)
     #np_input = np.asmatrix(input_data, dtype = np.float)
     #X = np.mean(np.asarray(input_data, dtype=np.float), axis=1)
-    meanz = 120547
-    maxz = 500000
-    minz = 4650
+    meanz = 111334.06928537242
+    maxz = 500000.0
+    minz = 920
     
     X = X - meanz
     X = X/(maxz-minz)
@@ -93,13 +93,17 @@ loaded_model = model_from_json(loaded_model_json)
 loaded_model.load_weights("model.h5")
 print("Loaded model from disk")
 
-history_len = 100
+history_len = 200
 i = 0
 score_guide = 0.4
 thresh = 300000
 with open('history.json', 'w') as fp:
 	data = {}
 	history = np.zeros(history_len)
+	for i in range(0, history_len):
+		if i%2:
+			history[i] = 1
+	
 	data['hist'] = history.tolist()
 	data['i'] = i
 	data['score_guide'] = score_guide
@@ -144,6 +148,8 @@ def work_function_POST(buf):
 		print("Leaning Left")
 	elif pos == 4:
 		print("Leaning Right")
+	elif pos == 5:
+		print("Crossed Legs")
 	else:
 		print("Invalid Class")
 		
@@ -155,9 +161,29 @@ def work_function_POST(buf):
 	if i>history_len-1:
 		i = 0
 	
-	history[i]=pos
+	if occ:
+		if pos == 0:
+			history[int(i)]=1
+		else:
+			history[int(i)]=0
 	i = i + 1
 	score = np.mean(np.asarray(history, dtype=np.float32))
+	print('@@@@@@@@@@@@@ SCORE = %f @@@@@@@@@@@' % (score))
+	#print(history)
+	#score = 0 
+	#delta = 0.02
+	#if occ: 
+		#for z in history:
+			#if z != 0:
+				#score = score + delta
+			#elif z != 0:
+				#score = score + delta
+	
+	#if score < 0:
+		#score = 0
+	#elif score > 1:
+		#score = 1
+	
 	if score > score_guide:
 		ui = "Good job!"
 	else:
