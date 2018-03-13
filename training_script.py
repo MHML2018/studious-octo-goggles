@@ -8,7 +8,7 @@ import numpy as np
 # fix random seed for reproducibility
 #numpy.random.seed(7)
 # load pima indians dataset
-dataset = np.loadtxt("DataSetV2/data.csv", delimiter=",")
+dataset = np.loadtxt("DataSetV4/data.csv", delimiter=",")
 # split into input (X) and output (Y) variables
 X = dataset[:,0:13]
 meanz = np.mean(X)
@@ -17,7 +17,7 @@ minz = np.min(X)
 X = X-meanz
 X = X/(maxz - minz)
 
-num_classes = 5
+num_classes = 2
 
 Y = dataset[:,13]
 Y = to_categorical(Y, num_classes)

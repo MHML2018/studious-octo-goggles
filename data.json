@@ -1,1 +1,1 @@
-{"confidence": null, "score": 0.05000000074505806, "ui": "Please consult the NHS guidelines", "posture": 1, "z": null, "x": null, "raw": [500000, 206750, 500000, 206750, 32500, 455840, 42930, 504430, 29820, 425120, 41920, 245860, 27440], "y": null, "occupied": true}
+{"score": 0.0, "ui": "Please consult the NHS guidelines", "confidence": null, "occupied": true, "posture": 0, "z": null, "y": null, "raw": [500000, 500000, 500000, 500000, 33520, 42290, 34870, 45240, 30630, 36160, 45600, 28790, 39060], "x": null}

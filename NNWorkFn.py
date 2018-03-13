@@ -47,9 +47,10 @@ def work_function_single_thread(input_data, loaded_model):
     X = np.asarray(input_data, dtype=np.float32)
     #np_input = np.asmatrix(input_data, dtype = np.float)
     #X = np.mean(np.asarray(input_data, dtype=np.float), axis=1)
-    meanz = 3651832
-    maxz = 2147483647.92
-    minz = 11431.13
+    meanz = 120547
+    maxz = 500000
+    minz = 4650
+    
     X = X - meanz
     X = X/(maxz-minz)
     # We need to load the nnet into memory in each thread (to make it thread safe)
@@ -95,7 +96,7 @@ print("Loaded model from disk")
 history_len = 100
 i = 0
 score_guide = 0.4
-thresh = 50000000
+thresh = 300000
 with open('history.json', 'w') as fp:
 	data = {}
 	history = np.zeros(history_len)

@@ -32,7 +32,8 @@ class AnyDevice(gatt.Device):
 			data.append(int(z))
 		const = 10
 		for z in range(0, int(len(data)/2)):
-			data_fix_back.append((int(data[z])<<8 | int(data[z+1]))*const)
+			
+			data_fix_back.append((int(data[2*z+1])<<8 | int(data[2*z]))*const)
 			
 			
 		value = bytes(self.butt_characteristic.read_value())
@@ -42,7 +43,7 @@ class AnyDevice(gatt.Device):
 			data.append(int(z))
 		const = 10
 		for z in range(0, int(len(data)/2)):
-			data_fix_butt.append((int(data[z])<<8 | int(data[z+1]))*const)
+			data_fix_butt.append((int(data[2*z+1])<<8 | int(data[2*z]))*const)
 		
 		print(data_fix_butt+data_fix_back)
 		with open('bledata.json', 'w') as outfile:

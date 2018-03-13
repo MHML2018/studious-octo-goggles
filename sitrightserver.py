@@ -97,7 +97,7 @@ class S(BaseHTTPRequestHandler):
             data = f.read()
             f.close()
             self.wfile.write(data.encode('utf-8'))
-		elif self.path == "/history":
+        elif self.path == "/history":
             post_data = post_data.decode('utf-8')
             print(post_data)
             jsondata = json.loads(post_data)
