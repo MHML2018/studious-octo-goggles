@@ -118,37 +118,37 @@ def work_function_POST(buf):
 		score_guide = history_dict['score_guide']
 		thresh = history_dict['thresh']
 	
-	try: 
-		jsondata = json.loads(buf)
-		cert = work_function_single_thread(jsondata['data'], loaded_model) 
+	#try: 
+	jsondata = json.loads(buf)
+	cert = work_function_single_thread(jsondata['data'], loaded_model) 
+	
+	meanval = np.mean(jsondata['data'])
+	print("Abs Val:", meanval)
+	if (meanval < thresh):
+		occ = True
+		print("SOMEONE IS SITTING HERE")
+	else:
+		occ = False
+		print("NO ONE IS SITTING HERE")
+	
+	pos = int(np.argmax(cert))
+	
+	if pos == 0:
+		print("GOOD")
+	elif pos == 1:
+		print("Leaning Back")
+	elif pos == 2:
+		print("Leaning Forward")
+	elif pos == 3:
+		print("Leaning Left")
+	elif pos == 4:
+		print("Leaning Right")
+	else:
+		print("Invalid Class")
 		
-		meanval = np.mean(jsondata['data'])
-		print("Abs Val:", meanval)
-		if (meanval < thresh):
-			occ = True
-			print("SOMEONE IS SITTING HERE")
-		else:
-			occ = False
-			print("NO ONE IS SITTING HERE")
 		
-		pos = int(np.argmax(cert))
-		
-		if pos == 0:
-			print("GOOD")
-		elif pos == 1:
-			print("Leaning Back")
-		elif pos == 2:
-			print("Leaning Forward")
-		elif pos == 3:
-			print("Leaning Left")
-		elif pos == 4:
-			print("Leaning Right")
-		else:
-			print("Invalid Class")
-		
-		
-	except ValueError:
-		print("Excepted Value Error")
+	#except ValueError:
+		#print("Excepted Value Error")
 	
 	
 	if i>history_len-1:

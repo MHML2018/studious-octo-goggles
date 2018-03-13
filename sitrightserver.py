@@ -23,9 +23,9 @@ import numpy as np
 
 import NNWorkFn
 
-import serial
-ser = serial.Serial('COM3', 115200, timeout=10)  # open serial port
-print("Opened port:", ser.name) # check which port was really used
+#import serial
+#ser = serial.Serial('/dev/ttyACM0', 115200, timeout=10)  # open serial port
+#print("Opened port:", ser.name) # check which port was really used
 
 KEY = 6769
 
@@ -33,6 +33,7 @@ def get_buf_fromserial(ser, buffer_len, buffer_width):
     buf = np.zeros((buffer_width, buffer_len), dtype=float)
     for i in range(0, buffer_len):
         line = ser.readline()   # read a '\n' terminated line
+        print(line)
         line = line.decode("utf-8") 
         line = line.strip('\n')
         line_str = line.split(",")
@@ -59,17 +60,35 @@ class S(BaseHTTPRequestHandler):
             data = f.read()
             f.close()
             self.wfile.write(data.encode('utf-8'))
-        elif self.path == "/serial":
-            print("###### SERIAL GET Request ##########")
-            while True:
-                try:
-                    buf = get_buf_fromserial(ser, 200, 13)
-                    buf = np.mean(buf, axis=1)
-                    break
-                except ValueError:
-                    print("Value Error")
+        #elif self.path == "/serial":
+            #print("###### SERIAL GET Request ##########")
+            #while True:
+                #try:
+                    #buf = get_buf_fromserial(ser, 200, 13)
+                    #buf = np.mean(buf, axis=1)
+                    #break
+                #except ValueError:
+                    #print("Value Error")
+            #print("Got buffer")
+            #buf_dict = {}
+            #buf_dict['data'] = buf.tolist()
+            #buf_dict['key'] = KEY
+            #buf_json = json.dumps(buf_dict)
+            #NNWorkFn.work_function_POST(buf_json.encode('utf-8'))
+            #self._set_headers()
+            #f=open("data.json")
+            #data = f.read()
+            #f.close()
+            #self.wfile.write(data.encode('utf-8'))
+        elif self.path == "/ble":
+            print("###### BLE GET Request ##########")
+            f=open("bledata.json")
+            bledata = f.read()
+            f.close()
+            bledata = json.loads(bledata)
+            print("Got buffer")
             buf_dict = {}
-            buf_dict['data'] = buf.tolist()
+            buf_dict['data'] = bledata### from BLE
             buf_dict['key'] = KEY
             buf_json = json.dumps(buf_dict)
             NNWorkFn.work_function_POST(buf_json.encode('utf-8'))
