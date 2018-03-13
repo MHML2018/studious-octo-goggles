@@ -51,11 +51,14 @@ class AnyDevice(gatt.Device):
 				s = data_fix_butt+data_fix_back
 				json.dump(s, outfile)
 		except:
-			pass
+			print("Cannot get chair data!")
 
+while True:
+	try:
+		# device = AnyDevice(mac_address='C3:22:AC:A0:80:34', manager=manager)
+		device = AnyDevice(mac_address='D6:6B:78:47:61:B5', manager=manager)
+		device.connect()
 
-# device = AnyDevice(mac_address='C3:22:AC:A0:80:34', manager=manager)
-device = AnyDevice(mac_address='D6:6B:78:47:61:B5', manager=manager)
-device.connect()
-
-manager.run()
+		manager.run()
+	except:
+		print("Restarting BLE services")	
