@@ -1,7 +1,7 @@
-import gatt, json
+import gatt, json, sys, os
 #import struct
 
-manager = gatt.DeviceManager(adapter_name='hci0')
+
 
 class AnyDevice(gatt.Device):
 	
@@ -25,8 +25,11 @@ class AnyDevice(gatt.Device):
 		self.back_characteristic.enable_notifications()
 
 	def characteristic_value_updated(self, characteristic, value):
-		try:
-			value = bytes(self.back_characteristic.read_value())
+			try:
+				value = bytes(self.back_characteristic.read_value())
+			except TypeError:
+				os.execl(sys.executable, sys.executable, *sys.argv)
+
 			data = []
 			data_fix_back = []
 			for z in value:
@@ -36,8 +39,11 @@ class AnyDevice(gatt.Device):
 				
 				data_fix_back.append((int(data[2*z+1])<<8 | int(data[2*z]))*const)
 				
+			try:
+				value = bytes(self.butt_characteristic.read_value())
+			except TypeError:
+				os.execl(sys.executable, sys.executable, *sys.argv)
 				
-			value = bytes(self.butt_characteristic.read_value())
 			data = []
 			data_fix_butt = []
 			for z in value:
@@ -50,15 +56,15 @@ class AnyDevice(gatt.Device):
 			with open('bledata.json', 'w') as outfile:
 				s = data_fix_butt+data_fix_back
 				json.dump(s, outfile)
-		except:
-			print("Cannot get chair data!")
+		#except:
+			#print("Cannot get chair data!")
 
-while True:
-	try:
-		# device = AnyDevice(mac_address='C3:22:AC:A0:80:34', manager=manager)
-		device = AnyDevice(mac_address='D6:6B:78:47:61:B5', manager=manager)
-		device.connect()
 
-		manager.run()
-	except:
-		print("Restarting BLE services")	
+manager = gatt.DeviceManager(adapter_name='hci0')
+# device = AnyDevice(mac_address='C3:22:AC:A0:80:34', manager=manager)
+device = AnyDevice(mac_address='D6:6B:78:47:61:B5', manager=manager)
+device.connect()
+
+manager.run()
+	
+
