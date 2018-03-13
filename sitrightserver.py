@@ -97,6 +97,14 @@ class S(BaseHTTPRequestHandler):
             data = f.read()
             f.close()
             self.wfile.write(data.encode('utf-8'))
+		elif self.path == "/history":
+            post_data = post_data.decode('utf-8')
+            print(post_data)
+            jsondata = json.loads(post_data)
+            key = jsondata['key']
+            tmp = NNWorkFn.get_JSON_hist('longhistory.csv', key)
+            self.wfile.write(tmp.encode('utf-8'))
+        
 
     def do_HEAD(self):
         self._set_headers()
@@ -114,13 +122,6 @@ class S(BaseHTTPRequestHandler):
             data = f.read()
             f.close()
             self.wfile.write(data.encode('utf-8'))
-        elif self.path == "/history":
-            post_data = post_data.decode('utf-8')
-            print(post_data)
-            jsondata = json.loads(post_data)
-            key = jsondata['key']
-            tmp = NNWorkFn.get_JSON_hist('longhistory.csv', key)
-            self.wfile.write(tmp.encode('utf-8'))
         
 def run(server_class=HTTPServer, handler_class=S, port=8000):
     server_address = ('', port)
