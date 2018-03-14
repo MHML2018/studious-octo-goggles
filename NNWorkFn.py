@@ -217,7 +217,8 @@ def get_JSON_hist(fname, key):
 		tmpdict['x'] = time.strftime('%Y-%m-%dT%H:%M:%S', time.gmtime(float(i[1])))
 		tmpdict['y'] = i[2]
 		data.append(tmpdict)
-	
-	return json.dumps(data)
+	jsonout = {};
+	jsonout['data'] = data;
+	return json.dumps(jsonout)
 	
 
