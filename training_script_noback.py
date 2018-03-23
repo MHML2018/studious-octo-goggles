@@ -19,7 +19,7 @@ from sklearn.metrics import confusion_matrix
 
 dataset_train, dataset_test = train_test_split(dataset, test_size=0.2)
 
-X = dataset_train[:,0:13]
+X = dataset_train[:,0+4:13]
 
 meanz = np.mean(X)
 maxz = np.max(X)
@@ -35,7 +35,7 @@ Y = to_categorical(Y, num_classes)
 #print(X)
 #print(Y)
 model = Sequential()
-model.add(Dense(20, input_dim=13, activation='tanh'))
+model.add(Dense(20, input_dim=13-4, activation='tanh'))
 model.add(Dense(20, activation='tanh'))
 model.add(Dropout(0.2))
 model.add(Dense(20, activation='tanh'))
@@ -51,7 +51,7 @@ callbacks_list = [earlystop]
 model.fit(X, Y, epochs=1000, batch_size=1000, callbacks=callbacks_list, verbose=1, validation_split=0.2)
 # evaluate the model
 
-X_test = dataset_test[:,0:13]
+X_test = dataset_test[:,0+4:13]
 X_test = X_test-meanz
 X_test = X_test/(maxz - minz)
 Y_test = dataset_test[:,13]
